@@ -44,6 +44,14 @@
                 android:layout_height="20dp"
                 android:text="yiyuetan"
             />
+            <TextView
+                android:visibility="gone"
+                android:layout_marginLeft="10dp"
+                android:id="@+id/tv_interview_status1"
+                android:layout_width="235dp"
+                android:layout_height="20dp"
+                android:text="yifangqi"
+            />
         </LinearLayout>
         </LinearLayout>
 </LinearLayout>
