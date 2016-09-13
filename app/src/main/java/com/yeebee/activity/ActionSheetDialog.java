@@ -1,4 +1,4 @@
-package com.yeebee;
+package com.yeebee.activity;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -12,6 +12,8 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
+import com.yeebee.R;
 
 import java.util.ArrayList;
 import java.util.List;

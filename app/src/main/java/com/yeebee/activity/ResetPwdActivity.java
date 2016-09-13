@@ -1,4 +1,4 @@
-package com.yeebee.activity.home;
+package com.yeebee.activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;

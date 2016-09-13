@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -60,11 +61,13 @@ public class DetailsItemActivity extends AppCompatActivity {
     private void intentDate() {
         Intent intent = getIntent();
         Bundle bundle = intent.getBundleExtra("bundle");
-        img = bundle.getString("imgInterviewItem");
+//        img = bundle.getString("imgInterviewItem");
         Title = bundle.getString("tvInterviewTitle");
-        money = bundle.getString("tvChooseProjectMoney");
+//        Log.d("要传递的title",Title);
+//        money = bundle.getString("tvChooseProjectMoney");
+//        mTvDetailsTitle.setText(Title);
+//        mTvDetailsMoney.setText(money);
+//        mImgDetailsItem.setImageResource(R.mipmap.logo);
         mTvDetailsTitle.setText(Title);
-        mTvDetailsMoney.setText(money);
-        mImgDetailsItem.setImageResource(R.mipmap.logo);
     }
 }

@@ -1,8 +1,7 @@
-package com.yeebee.activity.home;
+package com.yeebee.activity;
 
 import android.content.Intent;
 import android.os.Handler;
-import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;

@@ -1,4 +1,4 @@
-package com.yeebee;
+package com.yeebee.activity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -7,7 +7,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
-import com.yeebee.activity.MessageActivity;
+import com.yeebee.R;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;

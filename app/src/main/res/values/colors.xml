@@ -36,4 +36,5 @@
     <color name="login">#FFE109</color>
     <color name="remind_item">#11000000</color>
     <color name="editview_frame">#8aa19d</color>
+    <color name="province_line_border">#C7C7C7</color>
 </resources>

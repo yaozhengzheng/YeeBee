@@ -23,7 +23,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.home.LoginActivity">
+        <activity android:name=".activity.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -34,19 +34,19 @@
         </activity>
         <activity android:name=".activity.WorkSpaceActivity">
         </activity>
-        <activity android:name=".activity.home.ResetPwdActivity">
+        <activity android:name=".activity.ResetPwdActivity">
         </activity>
-        <activity android:name=".MainActivity">
+        <activity android:name=".activity.MainActivity">
         </activity>
-        <activity android:name=".activity.home.SplashActivity">
+        <activity android:name=".activity.SplashActivity">
         </activity>
         <activity android:name=".activity.ProjectInformationActivity">
         </activity>
         <activity android:name=".activity.QuestionActivity">
         </activity>
-        <activity android:name=".activity.home.RegistActivity">
+        <activity android:name=".activity.RegistActivity">
         </activity>
-        <activity android:name=".ActionSheetActivity">
+        <activity android:name=".activity.ActionSheetActivity">
         </activity>
         <activity android:name=".activity.SettingActivity">
         </activity>

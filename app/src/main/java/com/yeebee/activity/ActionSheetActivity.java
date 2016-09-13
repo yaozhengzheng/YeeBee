@@ -1,4 +1,4 @@
-package com.yeebee;
+package com.yeebee.activity;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,10 +8,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.yeebee.R;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 
 /**

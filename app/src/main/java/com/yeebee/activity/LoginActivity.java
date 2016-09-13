@@ -1,4 +1,4 @@
-package com.yeebee.activity.home;
+package com.yeebee.activity;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -10,6 +10,7 @@ import android.os.Message;
 import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -17,7 +18,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.yeebee.MainActivity;
 import com.yeebee.R;
 import com.yeebee.utils.ConnectUtils;
 import com.yeebee.utils.NetWorkUtils;
@@ -80,7 +80,8 @@ public class LoginActivity extends AppCompatActivity {
                         "登录成功！", Toast.LENGTH_SHORT).show();
                 Message msg2 = Message.obtain();
                 msg2.what = MSG_SET_NUM;
-                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                //登陆成功跳转
+                startActivity(new Intent(LoginActivity.this, InterviewListActivity.class));
                 finish();
             }
             if (msg.what==0x121){
@@ -131,9 +132,11 @@ public class LoginActivity extends AppCompatActivity {
                 break;
             //跳到注册页面
             case R.id.tv_attesttation:
+                startActivity(new Intent(LoginActivity.this,RegistActivity.class));
                 break;
             //跳到忘记密码界面
             case R.id.tv_forgot:
+                startActivity(new Intent(LoginActivity.this,ResetPwdActivity.class));
                 break;
         }
     }
@@ -191,6 +194,7 @@ public class LoginActivity extends AppCompatActivity {
                             String userId = myDataObj.getString("USERID");
                             String USERNICK = myDataObj.optString("USERNICK");
                             mSharedPreferenceUtil.setUserId(userId);
+                            Log.d("userid------>",userId);
                             mSharedPreferenceUtil.setPhone(mPhone);
                             mSharedPreferenceUtil.setNickName(USERNICK);
                             mSharedPreferenceUtil.setIsLogin(true);
