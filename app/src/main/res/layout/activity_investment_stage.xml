@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_investment_stage"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.yeebee.activity.InvestmentStageActivity">
+    <ListView
+        android:id="@+id/lv_stage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></ListView>
+    <!--<RadioGroup
+        android:id="@+id/radio"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:orientation="vertical">
+        <RadioButton
+            android:background="#ffffff"
+            android:id="@+id/stage_1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:button="@null"
+            android:checked="true"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="选项目"/>
+
+        <RadioButton
+            android:background="#ffffff"
+            android:id="@+id/stage_2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:button="@null"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="审项目"
+            android:layout_marginLeft="-1dp"/>
+
+        <RadioButton
+            android:id="@+id/stage_cancel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="#ffffff"
+            android:button="@null"
+            android:gravity="center"
+            android:padding="10dp"
+            android:layout_marginLeft="-1dp"
+            android:text="取消"
+        />
+    </RadioGroup>
+
+-->
+
+</RelativeLayout>

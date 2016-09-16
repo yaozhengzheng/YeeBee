@@ -22,19 +22,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginBottom="38dp"
+            android:layout_marginBottom="15dp"
             android:layout_marginLeft="34dp"
-            android:layout_marginTop="35dp"
+            android:layout_marginTop="15dp"
             android:text="我的头像"
             android:textSize="16sp"/>
         <ImageView
             android:id="@+id/img_regist"
             android:layout_width="67dp"
             android:layout_height="67dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="5dp"
             android:layout_marginLeft="150dp"
             android:layout_marginRight="20dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="5dp"
             android:background="@drawable/shape_photo"
             android:scaleType="centerInside"
             android:src="@mipmap/ic_launcher"
@@ -43,7 +43,7 @@
     <RelativeLayout
         android:id="@+id/rl_1"
         android:layout_width="match_parent"
-        android:layout_height="45dp"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/ll_register"
         android:layout_weight="1">
         <EditText
@@ -56,8 +56,6 @@
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="28dp"
             android:drawableLeft="@mipmap/bitian2x"
@@ -68,19 +66,19 @@
     <RelativeLayout
         android:id="@+id/rl_2"
         android:layout_width="match_parent"
-        android:layout_height="45dp"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/rl_1"
         android:layout_weight="1">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="13dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
             android:layout_marginLeft="28dp"
-            android:layout_marginTop="14dp"
-
             android:drawableLeft="@mipmap/bitian2x"
-            android:drawablePadding="6dp"
-            android:text="身份证"
+            android:drawablePadding="3dp"
+            android:text="身份证"/>
         />
         <EditText
             android:id="@+id/edt_idNum"
@@ -93,25 +91,33 @@
     <RelativeLayout
         android:id="@+id/rl_3"
         android:layout_width="match_parent"
-        android:layout_height="45dp"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/rl_2"
         android:layout_weight="1">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="13dp"
+            android:layout_marginBottom="5dp"
             android:layout_marginLeft="34dp"
-            android:layout_marginTop="14dp"
-
+            android:layout_marginTop="5dp"
             android:text="投资阶段"
         />
         <TextView
             android:id="@+id/regist_jieduan"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="13dp"
+            android:layout_marginBottom="5dp"
             android:layout_marginLeft="100dp"
-            android:layout_marginTop="14dp"
+            android:layout_marginTop="5dp"
+            android:text="abcdddd"/>
+        <TextView
+            android:visibility="gone"
+            android:id="@+id/regist_jieduan1"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="100dp"
+            android:layout_marginTop="5dp"
             android:text="abcdddd"/>
         />
         <ImageView
@@ -128,24 +134,24 @@
     <RelativeLayout
         android:id="@+id/rl_4"
         android:layout_width="match_parent"
-        android:layout_height="45dp"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/rl_3"
         android:layout_weight="1">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="13dp"
+            android:layout_marginBottom="5dp"
             android:layout_marginLeft="34dp"
-            android:layout_marginTop="14dp"
+            android:layout_marginTop="5dp"
             android:text="所属机构"
         />
         <TextView
             android:id="@+id/regist_jigou"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="13dp"
+            android:layout_marginBottom="5dp"
             android:layout_marginLeft="100dp"
-            android:layout_marginTop="14dp"
+            android:layout_marginTop="5dp"
             android:text="abcdddd"/>
         />
         <ImageView
@@ -162,15 +168,15 @@
     <RelativeLayout
         android:id="@+id/rl_5"
         android:layout_width="match_parent"
-        android:layout_height="45dp"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/rl_4"
         android:layout_weight="1">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="13dp"
+            android:layout_marginBottom="5dp"
             android:layout_marginLeft="28dp"
-            android:layout_marginTop="14dp"
+            android:layout_marginTop="5dp"
 
             android:drawableLeft="@mipmap/bitian2x"
             android:drawablePadding="6dp"
@@ -180,9 +186,9 @@
             android:id="@+id/regist_touzilingyu"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="13dp"
+            android:layout_marginBottom="5dp"
             android:layout_marginLeft="100dp"
-            android:layout_marginTop="14dp"
+            android:layout_marginTop="5dp"
             android:text="abcdddd"/>
         />
         <ImageView
@@ -199,15 +205,15 @@
     <RelativeLayout
         android:id="@+id/rl_6"
         android:layout_width="match_parent"
-        android:layout_height="45dp"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/rl_5"
         android:layout_weight="1">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="13dp"
+            android:layout_marginBottom="5dp"
             android:layout_marginLeft="28dp"
-            android:layout_marginTop="14dp"
+            android:layout_marginTop="5dp"
 
             android:drawableLeft="@mipmap/bitian2x"
             android:drawablePadding="6dp"
@@ -217,9 +223,9 @@
             android:id="@+id/regist_toucichengshi"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="13dp"
+            android:layout_marginBottom="5dp"
             android:layout_marginLeft="100dp"
-            android:layout_marginTop="14dp"
+            android:layout_marginTop="5dp"
             android:text="abcdddd"/>
         />
         <ImageView
@@ -236,22 +242,23 @@
     <RelativeLayout
         android:id="@+id/rl_7"
         android:layout_width="match_parent"
-        android:layout_height="45dp"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/rl_6"
         android:layout_weight="1">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="13dp"
+            android:layout_marginBottom="5dp"
             android:layout_marginLeft="28dp"
-            android:layout_marginTop="14dp"
-
+            android:layout_marginTop="5dp"
             android:drawableLeft="@mipmap/bitian2x"
             android:drawablePadding="6dp"
             android:text="手机号"
         />
         <EditText
             android:id="@+id/edt_phone"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="100dp"
@@ -261,7 +268,7 @@
     <RelativeLayout
         android:id="@+id/rl_8"
         android:layout_width="match_parent"
-        android:layout_height="45dp"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/rl_7"
         android:layout_weight="1">
         <TextView
@@ -293,11 +300,59 @@
             android:text="发送验证码"
         />
     </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/rl_9"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rl_8"
+        android:layout_weight="1">
+        <EditText
+            android:id="@+id/edt_pwd"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="100dp"
+            android:hint="123456"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="28dp"
+            android:drawableLeft="@mipmap/bitian2x"
+            android:drawablePadding="6dp"
+            android:text="密码"/>
+        />
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/rl_10"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rl_9"
+        android:layout_weight="1">
+        <EditText
+            android:id="@+id/edt_conf_pwd"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="100dp"
+            android:hint="123456"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="28dp"
+            android:drawableLeft="@mipmap/bitian2x"
+            android:drawablePadding="6dp"
+            android:text="确认密码"/>
+        />
+    </RelativeLayout>
     <TextView
         android:id="@+id/tv_tiaokuan"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/rl_8"
+        android:layout_below="@+id/rl_10"
         android:layout_centerHorizontal="true"
         android:layout_gravity="center_horizontal"
         android:text="点击即同意所有服务条款"

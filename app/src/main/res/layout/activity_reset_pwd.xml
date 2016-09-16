@@ -45,7 +45,7 @@
         android:paddingRight="15dp">
 
         <EditText
-            android:id="@+id/et_name"
+            android:id="@+id/et_tel"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerVertical="true"

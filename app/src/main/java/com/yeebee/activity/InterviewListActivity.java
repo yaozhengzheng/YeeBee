@@ -48,7 +48,6 @@ public class InterviewListActivity extends AppCompatActivity {
     int PageSize = 10;
     int CurrentPage = 1;
     private Context mContext = InterviewListActivity.this;
-    private String mAa;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

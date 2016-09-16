@@ -81,7 +81,7 @@ public class LoginActivity extends AppCompatActivity {
                 Message msg2 = Message.obtain();
                 msg2.what = MSG_SET_NUM;
                 //登陆成功跳转
-                startActivity(new Intent(LoginActivity.this, InterviewListActivity.class));
+                startActivity(new Intent(LoginActivity.this, QuestionActivity.class));
                 finish();
             }
             if (msg.what==0x121){
@@ -183,8 +183,8 @@ public class LoginActivity extends AppCompatActivity {
 
                 String date_params=json.toString();
                 String code_params="U007_2";// 登录接口编号
-
                 String myData= ConnectUtils.Post_Myparams(date_params,code_params);
+
                 if (myData!=null){
                     JSONObject myDataObj=null;
                     try {

@@ -17,6 +17,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -53,6 +54,14 @@
         <activity android:name=".activity.InterviewListActivity">
         </activity>
         <activity android:name=".activity.DetailsItemActivity">
+        </activity>
+        <activity android:name=".activity.InvestmentStageActivity">
+        </activity>
+        <activity android:name=".activity.AffiliationActivity">
+        </activity>
+        <activity android:name=".activity.InvestmentFieldActivity">
+        </activity>
+        <activity android:name=".activity.InvestmentCityActivity">
         </activity>
     </application>
 

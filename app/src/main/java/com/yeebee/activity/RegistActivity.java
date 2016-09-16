@@ -1,49 +1,31 @@
 package com.yeebee.activity;
 
 import android.content.Context;
-import android.content.res.AssetManager;
-import android.graphics.drawable.ColorDrawable;
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Gravity;
-import android.view.LayoutInflater;
+import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.yeebee.FirstEvent;
 import com.yeebee.R;
 import com.yeebee.SelectPopupWindow;
-
-import com.yeebee.model.CityModel;
-import com.yeebee.model.DistrictModel;
-
-
-import com.yeebee.model.ProvinceModel;
-import com.yeebee.service.XmlParserHandler;
-import com.yeebee.widget.OnWheelChangedListener;
-import com.yeebee.widget.WheelView;
-import com.yeebee.widget.adapters.ArrayWheelAdapter;
-
+import com.yeebee.utils.ConnectUtils;
+import com.yeebee.utils.SharedPreferenceUtil;
+import com.yeebee.utils.TelNumMatch;
 
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-
-import java.io.InputStream;
-import java.util.HashMap;
-
-import java.util.List;
-import java.util.Map;
-
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -90,6 +72,12 @@ public class RegistActivity extends AppCompatActivity implements View.OnClickLis
     Button mRegistCancel;
     @InjectView(R.id.regist)
     Button mRegist;
+    @InjectView(R.id.edt_pwd)
+    EditText mEdtPwd;
+    @InjectView(R.id.edt_conf_pwd)
+    EditText mEdtConfPwd;
+    @InjectView(R.id.regist_jieduan1)
+    TextView mRegistJieduan1;
 
     //自定义投资阶段弹窗
     SelectPopupWindow mPopupWindow;
@@ -97,23 +85,123 @@ public class RegistActivity extends AppCompatActivity implements View.OnClickLis
     AlertDialog mDialog;
 
     //用户输入的注册信息
-    String name;
-    String idCard;
-    String phone;
+    String string_userImg;
+    String string_userPhone;
+    String string_userName;
+    String string_pwd;
+    String string_conf_pwd;
+    String string_userYanZhengMa;
+    String string_idCard;
+    int int_tourenId = 0;
+    int int_cityId;
+    int int_jieduanId;
+    int int_lingyuId = 0;
+    String string_jieduanMingcheng;
+    int int_jigouId = 0;
+    String string_jigouName;
+    @InjectView(R.id.rl_3)
+    RelativeLayout mRl3;
+    @InjectView(R.id.rl_4)
+    RelativeLayout mRl4;
+    @InjectView(R.id.rl_5)
+    RelativeLayout mRl5;
+    @InjectView(R.id.rl_6)
+    RelativeLayout mRl6;
 
-    //城市弹窗
-    private WheelView mViewProvince;
-    private WheelView mViewCity;
-    private WheelView mViewDistrict;
-    private Button mBtnConfirm;
+    private String city;
+    private String field;
+
+    private Context mContext = RegistActivity.this;
+    private SharedPreferenceUtil mSharedPreferenceUtil;
+
+    private static final int MSG_SET_NUM = 2001;
+    //发送验证码handler
+    Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            if (msg.what == 1) {
+                Toast.makeText(RegistActivity.this,
+                        "发送验证码成功！", Toast.LENGTH_SHORT).show();
+                Message msg2 = Message.obtain();
+                msg2.what = MSG_SET_NUM;
+            }
+            if (msg.what == 2) {
+                Toast.makeText(RegistActivity.this,
+                        "发送失败！", Toast.LENGTH_SHORT).show();
+            }
+            if (msg.what == 3) {
+                Toast.makeText(RegistActivity.this,
+                        "短信发送错误！", Toast.LENGTH_SHORT).show();
+            }
+            if (msg.what == 4) {
+                Toast.makeText(RegistActivity.this,
+                        "改手机号已注册！", Toast.LENGTH_SHORT).show();
+            }
+            super.handleMessage(msg);
+        }
+    };
+    //注册handler
+    Handler handler1 = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            if (msg.what == 1) {
+                Toast.makeText(RegistActivity.this,
+                        "注册成功！", Toast.LENGTH_SHORT).show();
+                Message msg2 = Message.obtain();
+                msg2.what = MSG_SET_NUM;
+                //注册成功后跳转到登陆页面
+                startActivity(new Intent(RegistActivity.this,LoginActivity.class));
+            }
+            if (msg.what == 0) {
+                Toast.makeText(RegistActivity.this,
+                        "手机号格式不正确！", Toast.LENGTH_SHORT).show();
+            }
+            if (msg.what == 2) {
+                Toast.makeText(RegistActivity.this,
+                        "手机号码不存在！", Toast.LENGTH_SHORT).show();
+            }
+            if (msg.what == 3) {
+                Toast.makeText(RegistActivity.this,
+                        "短信发送错误！", Toast.LENGTH_SHORT).show();
+            }
+            super.handleMessage(msg);
+        }
+    };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EventBus.getDefault().register(this);
         setContentView(R.layout.activity_regist);
-
         ButterKnife.inject(this);
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode==1&&resultCode==RESULT_OK){
+            string_jieduanMingcheng = data.getExtras().getString("stage");
+            int_jieduanId=data.getExtras().getInt("stageId");
+            mRegistJieduan.setText(string_jieduanMingcheng);
+        }else if (requestCode==2&&resultCode==RESULT_OK){
+            string_jigouName = data.getExtras().getString("affiliation");
+            mRegistJigou.setText(string_jigouName);
+        }else if (requestCode==3&&resultCode==RESULT_OK){
+            field = data.getExtras().getString("field");
+            mRegistTouzilingyu.setText(field);
+        }else{
+            city = data.getExtras().getString("city");
+            int_cityId= data.getExtras().getInt("cityId");
+            mRegistToucichengshi.setText(city);
+        }
+
+
+        if (string_jieduanMingcheng != null) {
+            Log.d("***拿到的数据----", string_jieduanMingcheng);
+
+        }
+
     }
 
     @Override
@@ -121,8 +209,9 @@ public class RegistActivity extends AppCompatActivity implements View.OnClickLis
         super.onDestroy();
         EventBus.getDefault().unregister(this);
     }
+
     @OnClick({R.id.img_regist, R.id.post_yanzhengma, R.id.regist_cancel,
-            R.id.regist, R.id.img_i1, R.id.img_i2, R.id.img_i3, R.id.img_i4})
+            R.id.regist, R.id.rl_3, R.id.rl_4, R.id.rl_5, R.id.rl_6})
     public void onClick(View view) {
         switch (view.getId()) {
             //注册头像
@@ -132,292 +221,189 @@ public class RegistActivity extends AppCompatActivity implements View.OnClickLis
 
             //发送验证码
             case R.id.post_yanzhengma:
+                string_userPhone = mEdtPhone.getText().toString().trim();
 
+                // 判断手机号码是否规范
+                if (TelNumMatch.isValidPhoneNumber(string_userPhone)) {
+
+                    //发送验证码
+                    postYanZheng();
+                } else {
+                    Toast.makeText(RegistActivity.this, "请输入正确的手机号",
+                            Toast.LENGTH_SHORT).show();
+                }
                 break;
+
 
             //取消
             case R.id.regist_cancel:
+                finish();
                 break;
 
             //注册
             case R.id.regist:
+//               if (IDCardValidate.validate_effective())
+                string_pwd = mEdtPwd.getText().toString().trim();
+                string_conf_pwd = mEdtConfPwd.getText().toString().trim();
+                string_userPhone = mEdtPhone.getText().toString().trim();
+                string_idCard = mEdtIdNum.getText().toString().trim();
+                string_jieduanMingcheng = mRegistJieduan.getText().toString().trim();
+                string_jigouName = mRegistJigou.getText().toString().trim();
+                field=mRegistTouzilingyu.getText().toString().trim();
+                city=mRegistToucichengshi.getText().toString().trim();
+                string_userYanZhengMa = mEdtYanzhengma.getText().toString().trim();
+                string_userName = mEdtName.getText().toString().trim();
+                register();
                 break;
 
             //弹出投资阶段弹窗
-            case R.id.img_i1:
-                showInvestmentStage();
+            case R.id.rl_3:
+                startActivityForResult(new Intent(RegistActivity.this, InvestmentStageActivity.class), 1);
                 break;
 
             //弹出所属机构弹窗
-            case R.id.img_i2:
-                Toast.makeText(this, "suoshujigou", Toast.LENGTH_SHORT).show();
+            case R.id.rl_4:
+                startActivityForResult(new Intent(RegistActivity.this, AffiliationActivity.class), 2);
                 break;
 
             //弹出投资领域弹窗
-            case R.id.img_i3:
-                showInvestmentFieldDialog();
+            case R.id.rl_5:
+                startActivityForResult(new Intent(RegistActivity.this, InvestmentFieldActivity.class), 3);
                 break;
 
             //弹出投资城市弹窗
-            case R.id.img_i4:
-                PopWindow popWindow = new PopWindow(RegistActivity.this);
-                popWindow.showAtLocation(findViewById(R.id.activity_register), Gravity.CENTER|Gravity.BOTTOM, 0, 0);
+            case R.id.rl_6:
+                startActivityForResult(new Intent(RegistActivity.this, InvestmentCityActivity.class), 4);
                 break;
         }
     }
 
-    //显示投资领域窗口
-    private void showInvestmentFieldDialog() {
-        LayoutInflater inflater = getLayoutInflater();
-        View layout = inflater.inflate(R.layout.investmentfield_dialog,
-                (ViewGroup) findViewById(R.id.investmentField));
-        new AlertDialog.Builder(RegistActivity.this).
-                setTitle("投资领域").setView(layout).
-                setPositiveButton("确定", null).show();
-    }
+    //注册接口
 
-    @Subscribe
-    public void onEventMainThread(FirstEvent event) {
-        String msg = event.getInfo();
-        mRegistToucichengshi.setText(msg);
-    }
+    public void register() {
 
-    //显示投资阶段窗口
-    private void showInvestmentStage() {
-        mPopupWindow = new SelectPopupWindow(RegistActivity.this, itemsClick);
-        //显示窗口
-        mPopupWindow.showAtLocation(RegistActivity.this.
-                        findViewById(R.id.activity_register),
-                Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                JSONObject json = new JSONObject();
+                try {
+                    json.put("USERPWD", string_pwd);
+                    json.put("CONFIRMUSERPWD", string_conf_pwd);
+                    json.put("USERTEL", string_userPhone);
+                    json.put("INVESTORNAME", string_userName);
+                    json.put("INVESTORIDCARD", string_idCard);
+                    json.put("USERYANZHENG", string_userYanZhengMa);
+                    json.put("INVESTORYSTAGENAME", string_jieduanMingcheng);
+                    json.put("INVESTORLINGID", int_lingyuId);
+                    json.put("INVESTORTOUCITYID",int_cityId);
+                    json.put("INVESTORYSTAGEID", int_jieduanId);
+                    json.put("INVESTORORGID", int_jigouId);
+                    json.put("INVESTORORGNAME", string_jigouName);
+                    json.put("INVESTORID", int_tourenId);
 
-    }
-
-    //为投资阶段窗口实现监听类
-    private View.OnClickListener itemsClick = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-        }
-    };
-
-    //显示城市三级联动
-    public class PopWindow extends PopupWindow implements OnWheelChangedListener, View.OnClickListener {
-
-        Context context;
-        private View view;
-
-        public PopWindow(Context context) {
-            super(context);
-            this.view = LayoutInflater.from(context).inflate(R.layout.pop, null);
-            this.context = context;
-            // 设置外部可点击
-            this.setOutsideTouchable(true);
-            /* 设置弹出窗口特征 */
-            // 设置视图
-            this.setContentView(this.view);
-            // 设置弹出窗体的宽和高
-            this.setHeight(700);
-            this.setWidth(RelativeLayout.LayoutParams.MATCH_PARENT);
-
-            // 设置弹出窗体可点击
-            this.setFocusable(true);
-
-            // 实例化一个ColorDrawable颜色为半透明
-            ColorDrawable dw = new ColorDrawable(0xb0000000);
-            // 设置弹出窗体的背景
-            this.setBackgroundDrawable(dw);
-            // 设置弹出窗体显示时的动画，从底部向上弹出
-            this.setAnimationStyle(R.style.Pop_Window);
-            setUpViews();
-            setUpListener();
-            setUpData();
-        }
-
-        /**
-         * 所有省
-         */
-        protected String[] mProvinceDatas;
-        /**
-         * key - 省 value - 市
-         */
-        protected Map<String, String[]> mCitisDatasMap = new HashMap<String, String[]>();
-        /**
-         * key - 市 values - 区
-         */
-        protected Map<String, String[]> mDistrictDatasMap = new HashMap<String, String[]>();
-
-        /**
-         * key - 区 values - 邮编
-         */
-        protected Map<String, String> mZipcodeDatasMap = new HashMap<String, String>();
-
-        /**
-         * 当前省的名称
-         */
-        protected String mCurrentProviceName;
-        /**
-         * 当前市的名称
-         */
-        protected String mCurrentCityName;
-        /**
-         * 当前区的名称
-         */
-        protected String mCurrentDistrictName = "";
-
-        /**
-         * 当前区的邮政编码
-         */
-        protected String mCurrentZipCode = "";
-
-        /**
-         * 解析省市区的XML数据
-         */
-
-        protected void initProvinceDatas() {
-            List<ProvinceModel> provinceList = null;
-            AssetManager asset = getAssets();
-            try {
-                InputStream input = asset.open("province_data.xml");
-                // 创建一个解析xml的工厂对象
-                SAXParserFactory spf = SAXParserFactory.newInstance();
-                // 解析xml
-                SAXParser parser = spf.newSAXParser();
-                XmlParserHandler handler = new XmlParserHandler();
-                parser.parse(input, handler);
-                input.close();
-                // 获取解析出来的数据
-                provinceList = handler.getDataList();
-                //*/ 初始化默认选中的省、市、区
-                if (provinceList != null && !provinceList.isEmpty()) {
-                    mCurrentProviceName = provinceList.get(0).getName();
-                    List<CityModel> cityList = provinceList.get(0).getCityList();
-                    if (cityList != null && !cityList.isEmpty()) {
-                        mCurrentCityName = cityList.get(0).getName();
-                        List<DistrictModel> districtList = cityList.get(0).getDistrictList();
-                        mCurrentDistrictName = districtList.get(0).getName();
-                        mCurrentZipCode = districtList.get(0).getZipcode();
-                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-                //*/
-                mProvinceDatas = new String[provinceList.size()];
-                for (int i = 0; i < provinceList.size(); i++) {
-                    // 遍历所有省的数据
-                    mProvinceDatas[i] = provinceList.get(i).getName();
-                    List<CityModel> cityList = provinceList.get(i).getCityList();
-                    String[] cityNames = new String[cityList.size()];
-                    for (int j = 0; j < cityList.size(); j++) {
-                        // 遍历省下面的所有市的数据
-                        cityNames[j] = cityList.get(j).getName();
-                        List<DistrictModel> districtList = cityList.get(j).getDistrictList();
-                        String[] distrinctNameArray = new String[districtList.size()];
-                        DistrictModel[] distrinctArray = new DistrictModel[districtList.size()];
-                        for (int k = 0; k < districtList.size(); k++) {
-                            // 遍历市下面所有区/县的数据
-                            DistrictModel districtModel = new DistrictModel(districtList.get(k).getName(), districtList.get(k).getZipcode());
-                            // 区/县对于的邮编，保存到mZipcodeDatasMap
-                            mZipcodeDatasMap.put(districtList.get(k).getName(), districtList.get(k).getZipcode());
-                            distrinctArray[k] = districtModel;
-                            distrinctNameArray[k] = districtModel.getName();
+                String date_params = json.toString();
+                String code_params = "U002_1";// 登录接口编号
+                String myData = ConnectUtils.Post_Myparams(date_params, code_params);
+                Log.d("注册接口数据*****", myData);
+                if (myData != null) {
+                    JSONObject myDataObj = null;
+                    try {
+                        myDataObj = new JSONObject(myData);
+                        int recode = myDataObj.getInt("Recode");
+                        if (recode == 1) {
+                            string_pwd=myDataObj.getString("USERPWD");
+                            mSharedPreferenceUtil.setPasswd(string_pwd);
+                            Message msg = handler1.obtainMessage();
+                            msg.what = 1;
+                            handler1.sendMessage(msg);
                         }
-                        // 市-区/县的数据，保存到mDistrictDatasMap
-                        mDistrictDatasMap.put(cityNames[j], distrinctNameArray);
+                        if (recode == 0) {
+                            Message msg = handler1.obtainMessage();
+                            msg.what = 0;
+                            handler1.sendMessage(msg);
+                        }
+                        if (recode == 2) {
+                            Message msg = handler1.obtainMessage();
+                            msg.what = 2;
+                            handler1.sendMessage(msg);
+                        }
+                        if (recode == 3) {
+                            Message msg = handler1.obtainMessage();
+                            msg.what = 3;
+                            handler1.sendMessage(msg);
+                        }
+                        if (recode == 4) {
+                            Message msg = handler1.obtainMessage();
+                            msg.what = 4;
+                            handler.sendMessage(msg);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                    // 省-市的数据，保存到mCitisDatasMap
-                    mCitisDatasMap.put(provinceList.get(i).getName(), cityNames);
                 }
-            } catch (Throwable e) {
-                e.printStackTrace();
-            } finally {
-
+                return null;
             }
-        }
-
-        private void setUpViews() {
-            mViewProvince = (WheelView) view.findViewById(R.id.id_province);
-            mViewCity = (WheelView) view.findViewById(R.id.id_city);
-            mViewDistrict = (WheelView) view.findViewById(R.id.id_district);
-            mBtnConfirm = (Button) view.findViewById(R.id.btn_confirm);
-        }
-
-        private void setUpListener() {
-            // 添加change事件
-            mViewProvince.addChangingListener(this);
-            // 添加change事件
-            mViewCity.addChangingListener(this);
-            // 添加change事件
-            mViewDistrict.addChangingListener(this);
-            // 添加onclick事件
-            mBtnConfirm.setOnClickListener(this);
-        }
-
-        private void setUpData() {
-            initProvinceDatas();
-            mViewProvince.setViewAdapter(new ArrayWheelAdapter<String>(RegistActivity.this, mProvinceDatas));
-            // 设置可见条目数量
-            mViewProvince.setVisibleItems(7);
-            mViewCity.setVisibleItems(7);
-            mViewDistrict.setVisibleItems(7);
-            updateCities();
-            updateAreas();
-        }
-
-        @Override
-        public void onChanged(WheelView wheel, int oldValue, int newValue) {
-            // TODO Auto-generated method stub
-            if (wheel == mViewProvince) {
-                updateCities();
-            } else if (wheel == mViewCity) {
-                updateAreas();
-            } else if (wheel == mViewDistrict) {
-                mCurrentDistrictName = mDistrictDatasMap.get(mCurrentCityName)[newValue];
-                mCurrentZipCode = mZipcodeDatasMap.get(mCurrentDistrictName);
-            }
-        }
-
-        /**
-         * 根据当前的市，更新区WheelView的信息
-         */
-        private void updateAreas() {
-            int pCurrent = mViewCity.getCurrentItem();
-            mCurrentCityName = mCitisDatasMap.get(mCurrentProviceName)[pCurrent];
-            String[] areas = mDistrictDatasMap.get(mCurrentCityName);
-
-            if (areas == null) {
-                areas = new String[]{""};
-            }
-            mViewDistrict.setViewAdapter(new ArrayWheelAdapter<>(context, areas));
-            mViewDistrict.setCurrentItem(0);
-        }
-
-        /**
-         * 根据当前的省，更新市WheelView的信息
-         */
-        private void updateCities() {
-            int pCurrent = mViewProvince.getCurrentItem();
-            mCurrentProviceName = mProvinceDatas[pCurrent];
-            String[] cities = mCitisDatasMap.get(mCurrentProviceName);
-            if (cities == null) {
-                cities = new String[]{""};
-            }
-            mViewCity.setViewAdapter(new ArrayWheelAdapter<String>(context, cities));
-            mViewCity.setCurrentItem(0);
-            updateAreas();
-        }
-
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()) {
-                case R.id.btn_confirm:
-                    showSelectedResult();
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        private void showSelectedResult() {
-            EventBus.getDefault().post(new FirstEvent(mCurrentProviceName + "," + mCurrentCityName + ","
-                    + mCurrentDistrictName + "," + mCurrentZipCode));
-
-        }
+        }.execute();
     }
+
+    //获取验证码接口
+    public void postYanZheng() {
+
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                JSONObject json = new JSONObject();
+                try {
+                    json.put("USERTEL", string_userPhone);
+                    json.put("USERYANZHENG", string_userYanZhengMa);
+                    json.put("USERIMIE", SharedPreferenceUtil.getIMEI(mContext));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                String date_params = json.toString();
+                String code_params = "U001_1";// 登录接口编号
+                String myData = ConnectUtils.Post_Myparams(date_params, code_params);
+                Log.d("验证码接口数据*****", myData);
+                if (myData != null) {
+                    JSONObject myDataObj = null;
+                    try {
+                        myDataObj = new JSONObject(myData);
+                        int recode = myDataObj.getInt("Recode");
+                        if (recode == 1) {
+                            Message msg = handler.obtainMessage();
+                            msg.what = 1;
+                            handler.sendMessage(msg);
+                        }
+                        if (recode == 0) {
+                            Message msg = handler.obtainMessage();
+                            msg.what = 0;
+                            handler.sendMessage(msg);
+                        }
+                        if (recode == 2) {
+                            Message msg = handler.obtainMessage();
+                            msg.what = 2;
+                            handler.sendMessage(msg);
+                        }
+                        if (recode == 3) {
+                            Message msg = handler.obtainMessage();
+                            msg.what = 3;
+                            handler.sendMessage(msg);
+                        }
+                        if (recode == 4) {
+                            Message msg = handler.obtainMessage();
+                            msg.what = 4;
+                            handler.sendMessage(msg);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                return null;
+            }
+        }.execute();
+    }
+
 }
